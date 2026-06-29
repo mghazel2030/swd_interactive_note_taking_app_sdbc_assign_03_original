@@ -1,0 +1,138 @@
+<%- include('../partials/header', { title, user }) %>
+<!--
+    @file views/auth/login.ejs
+
+    @Description: 
+
+    Includes the shared header partial.
+    The header receives two variables:
+      - title: The page title to display in <title> and header markup.
+      - user: The authenticated user object (if any), used for conditional UI.
+    <%- %> is used instead of <%= %> to render raw HTML without escaping.
+
+    Author: mghazel
+ 
+    Version: 10-June-2026
+-->
+
+<section class="panel login-panel">
+    <!-- Main login panel container styled with .panel and .login-panel classes -->
+
+    <h2>Sign in with Google</h2>
+    <!-- Page heading for the login section -->
+
+    <p class="muted">
+        <!-- Informational text explaining how authentication works -->
+        Please sign in once to access your notes. After a successful login, the server stores your user profile in a secure session cookie, so you remain signed in until the session expires or you click Logout.
+    </p>
+
+    <% if (!googleClientId) { %>
+        <!--
+            Conditional block:
+            If googleClientId is NOT provided by the server (missing in .env),
+            show an error alert informing the developer that configuration is required.
+        -->
+        <div class="alert error-alert">
+            <strong>Configuration required:</strong> GOOGLE_CLIENT_ID is missing from your .env file.
+        </div>
+    <% } %>
+
+    <% if (error === 'missing-credential') { %>
+        <!--
+            If the server passed error="missing-credential",
+            it means Google did not return an ID token.
+            This usually happens if the user cancels the popup or a browser extension blocks it.
+        -->
+        <div class="alert error-alert">Google did not return a credential. Please try again.</div>
+
+    <% } else if (error === 'invalid-token') { %>
+        <!--
+            If error="invalid-token",
+            the Google ID token was malformed, expired, or failed verification.
+            The user must sign in again.
+        -->
+        <div class="alert error-alert">The Google token was invalid or expired. Please sign in again.</div>
+    <% } %>
+
+    <form id="googleLoginForm" method="POST" action="/auth/google">
+        <!--
+            Hidden form that will be submitted automatically after Google returns a credential.
+            The form POSTs to /auth/google, where the server verifies the ID token.
+        -->
+
+        <input type="hidden" name="credential" id="credentialInput">
+        <!--
+            Hidden input where the Google ID token will be inserted by handleGoogleCredential().
+            The server expects this field.
+        -->
+
+        <input type="hidden" name="next" value="<%= next %>">
+        <!--
+            Hidden input storing the "next" redirect path.
+            If the user originally tried to access /notes, they will be redirected there after login.
+        -->
+    </form>
+
+    <% if (googleClientId) { %>
+        <!--
+            Only render Google Identity Services widgets if googleClientId is available.
+            Without a valid client ID, the Google sign-in button cannot be initialized.
+        -->
+
+        <div id="g_id_onload"
+             data-client_id="<%= googleClientId %>"
+             data-callback="handleGoogleCredential"
+             data-auto_prompt="false">
+        </div>
+        <!--
+            g_id_onload:
+            - Loads Google Identity Services automatically.
+            - data-client_id: The OAuth client ID from Google Cloud Console.
+            - data-callback: The JS function to call when Google returns an ID token.
+            - data-auto_prompt="false": Prevents automatic sign-in prompts.
+        -->
+
+        <div class="g_id_signin"
+             data-type="standard"
+             data-size="large"
+             data-theme="outline"
+             data-text="signin_with"
+             data-shape="rectangular"
+             data-logo_alignment="left">
+        </div>
+        <!--
+            Renders the actual Google Sign-In button.
+            All attributes configure the button's appearance and behavior.
+        -->
+    <% } %>
+</section>
+
+<% if (googleClientId) { %>
+    <!--
+        Load Google Identity Services client library only if client ID exists.
+        async + defer ensures non-blocking loading.
+    -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+    <script>
+        /**
+         * Receives the Google Identity Services ID token and submits it to the server.
+         * The server verifies the token, creates the Express session, and redirects to /notes.
+         *
+         * @param {{credential: string}} response - Google sign-in response object.
+         *        response.credential contains the signed JWT ID token.
+         * @returns {void}
+         */
+        function handleGoogleCredential(response) {
+            // Insert the Google ID token into the hidden form field.
+            document.getElementById('credentialInput').value = response.credential;
+
+            // Submit the form to /auth/google.
+            // The server validates the token and logs the user in.
+            document.getElementById('googleLoginForm').submit();
+        }
+    </script>
+<% } %>
+
+<%- include('../partials/footer') %>
+<!-- Includes the shared footer partial -->

@@ -1,0 +1,68 @@
+<%- include('../partials/header', { title: title || 'Error', user: typeof user !== 'undefined' ? user : null }) %>
+<!--
+    @file views/errors/error.ejs
+
+    @Description: 
+
+    Includes the shared header partial.
+    The header receives two variables:
+
+      • title:
+          - If the server passed a title, use it.
+          - Otherwise, default to "Error".
+          - The `||` operator ensures a fallback title for pages that do not explicitly set one.
+
+      • user:
+          - If the server passed a user object, use it.
+          - If not, pass null.
+          - The typeof check prevents "user is not defined" runtime errors.
+
+    <%- %> is used instead of <%= %> to render raw HTML without escaping.
+    This is important because the header partial contains HTML markup.
+
+    Author: mghazel
+ 
+    Version: 10-June-2026
+-->
+
+<section class="panel error-panel">
+    <!--
+        Main container for the error page.
+        Styled using:
+          - .panel (general card-style container)
+          - .error-panel (centered text, spacing adjustments)
+    -->
+
+    <h2>Error <%= statusCode %></h2>
+    <!--
+        Displays the HTTP status code of the error.
+        Examples:
+          - 404 (Not Found)
+          - 500 (Internal Server Error)
+          - 401 (Unauthorized)
+        <%= %> escapes HTML to prevent injection.
+    -->
+
+    <p><%= message %></p>
+    <!--
+        Displays the human-readable error message passed from the server.
+        This message is typically set in Express error-handling middleware.
+        Example messages:
+          - "Note not found."
+          - "Authentication required."
+          - "Unexpected server error."
+    -->
+
+    <a class="button primary" href="/notes">Return to Notes</a>
+    <!--
+        Provides a clear recovery action for the user.
+        The button redirects back to the main Notes page.
+        Uses .button and .primary styling for visual prominence.
+    -->
+</section>
+
+<%- include('../partials/footer') %>
+<!--
+    Includes the shared footer partial.
+    Rendered with <%- %> to avoid escaping HTML.
+-->

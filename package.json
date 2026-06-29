@@ -1,0 +1,41 @@
+{
+  "name": "mghazel-note-taking-app-refactored",
+  "version": "2.0.0",
+  "description": "Modular Express, EJS, MongoDB Note Taking App with Google session login and CRUD tests.",
+  "main": "server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "test": "cross-env NODE_ENV=test mocha \"test/**/*.test.js\" --exit",
+    "test:watch": "cross-env NODE_ENV=test mocha \"test/**/*.test.js\" --watch"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "ejs": "^3.1.10",
+    "express": "^4.21.2",
+    "express-session": "^1.18.1",
+    "google-auth-library": "^10.6.2",
+    "method-override": "^3.0.0",
+    "mongoose": "^8.9.5"
+  },
+  "devDependencies": {
+    "chai": "^4.5.0",
+    "cross-env": "^7.0.3",
+    "mocha": "^11.0.1",
+    "mongodb-memory-server": "^10.1.4",
+    "nodemon": "^3.1.14",
+    "supertest": "^7.0.0"
+  },
+  "keywords": [
+    "express",
+    "ejs",
+    "mongodb",
+    "mongoose",
+    "crud",
+    "mocha",
+    "supertest"
+  ],
+  "author": "M Ghazel",
+  "license": "ISC"
+}

@@ -1,0 +1,95 @@
+<!--
+    @file partials/footer.ejs
+
+    @Description: 
+
+    - This footer partial is included at the bottom of every page.
+
+    Author: mghazel
+ 
+    Version: 10-June-2026
+-->
+
+</main>
+<!--
+    Closes the <main> element that was opened in the header or page layout.
+    The <main> tag semantically represents the primary content area of the page.
+    This closing tag ensures proper HTML structure and accessibility compliance.
+-->
+
+<footer class="site-footer">
+    <!--
+        Footer container styled with the .site-footer class.
+        This class typically provides:
+          • Padding
+          • Background color
+          • Border styling
+          • Centered text
+        The footer appears at the bottom of every page.
+    -->
+
+    <p>
+        © June 2026 | Mohsen Ghazel | Note Taking &amp; Management App |  Midterm Assignment 
+    </p>
+    <!--
+        Footer text providing:
+          • Copyright notice
+          • Author name
+          • Application name
+          • Technology stack summary
+
+        The &amp; entity is used to safely render the ampersand (&) character.
+        This text helps users and developers understand the app’s architecture.
+    -->
+</footer>
+
+<button class="go-top" type="button"
+        onclick="window.scrollTo({ top: 0, behavior: 'smooth' })">
+    Top
+</button>
+<!--
+    "Back to Top" floating button.
+
+    • class="go-top":
+        - Styled in styles.css to appear fixed in the bottom-right corner.
+        - Circular shape with contrasting background color.
+        - Always visible when scrolling.
+
+    • type="button":
+        - Prevents form submission behavior.
+
+    • onclick="window.scrollTo({ top: 0, behavior: 'smooth' })":
+        - Smoothly scrolls the page back to the top.
+        - Uses the modern scrollTo() API with smooth scrolling behavior.
+        - Enhances usability for long pages (e.g., large notes tables).
+-->
+
+<script src="/js/app.js"></script>
+<!--
+    Loads the main client-side JavaScript file for the application.
+
+    /js/app.js typically contains:
+      • Event listeners for inline edit forms
+      • AJAX helpers
+      • UI enhancements
+      • Form validation
+      • Table interactions
+      • Any custom front-end logic
+
+    Placing this script at the bottom:
+      • Ensures the DOM is fully loaded before JS executes
+      • Improves page load performance
+      • Prevents blocking the rendering of HTML content
+-->
+
+</body>
+<!--
+    Closes the <body> tag.
+    All visible content and scripts must be inside this tag.
+-->
+
+</html>
+<!--
+    Closes the root HTML document.
+    This marks the end of the rendered page.
+-->

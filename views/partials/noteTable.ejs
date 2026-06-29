@@ -1,0 +1,270 @@
+<!--
+    @file partials/noteTable.ejs
+
+    @Description: 
+
+    - This file renders the Existing Notes Table.
+    - It displays all notes belonging to the authenticated user
+
+    Author: mghazel
+ 
+    Version: 10-June-2026
+-->
+
+<section class="panel">
+    <!--
+        Outer container styled with .panel:
+          • White background
+          • Rounded corners
+          • Drop shadow
+          • Padding
+        This visually groups the notes table as a distinct UI section.
+    -->
+
+    <h2>Existing Notes</h2>
+    <!--
+        Section heading indicating that the table lists all existing notes
+        belonging to the authenticated user.
+    -->
+
+    <div class="table-wrapper">
+        <!--
+            Wrapper enabling horizontal scrolling on small screens.
+            Prevents table overflow issues on mobile.
+        -->
+
+        <table class="notes-table">
+            <!--
+                Main notes table.
+                .notes-table applies:
+                  • Full width
+                  • Border collapse
+                  • Minimum width (980px)
+                  • Styled header row
+            -->
+
+            <thead>
+                <!-- Table header section -->
+                <tr>
+                    <!-- Column labels -->
+                    <th>#</th>
+                    <!-- Row index (1-based) -->
+
+                    <th>Title</th>
+                    <!-- Note title -->
+
+                    <th>Type</th>
+                    <!-- Category (School, Work, Personal, etc.) -->
+
+                    <th>Priority</th>
+                    <!-- Priority level (High, Medium, Low) -->
+
+                    <th>Status</th>
+                    <!-- Status (In-progress, Completed, etc.) -->
+
+                    <th>Created</th>
+                    <!-- Creation timestamp -->
+
+                    <th>Updated</th>
+                    <!-- Last update timestamp -->
+
+                    <th>Due</th>
+                    <!-- Due date -->
+
+                    <th>Actions</th>
+                    <!-- Edit/Delete controls -->
+                </tr>
+            </thead>
+
+            <tbody>
+                <!-- Table body containing dynamic rows -->
+
+                <% if (notes.length === 0) { %>
+                    <!--
+                        If no notes exist, show a single row with a friendly message.
+                        colspan="9" spans all columns.
+                    -->
+                    <tr>
+                        <td colspan="9" class="empty-cell">
+                            No notes yet. Create your first note above.
+                        </td>
+                    </tr>
+                <% } %>
+
+                <% notes.forEach((note, index) => { %>
+                    <!--
+                        Loop through each note.
+                        index = 0-based index used for numbering.
+                        note = note object from MongoDB.
+                    -->
+
+                    <tr>
+                        <!-- Row for a single note -->
+
+                        <td><%= index + 1 %></td>
+                        <!--
+                            Display row number starting at 1.
+                            <%= %> escapes HTML.
+                        -->
+
+                        <td><%= note.title %></td>
+                        <!-- Note title -->
+
+                        <td><%= note.type %></td>
+                        <!-- Note category -->
+
+                        <td>
+                            <span class="pill"><%= note.priority %></span>
+                        </td>
+                        <!--
+                            Priority wrapped in .pill:
+                              • Rounded badge
+                              • Light background
+                              • Visual emphasis
+                        -->
+
+                        <td><%= note.status %></td>
+                        <!-- Note status -->
+
+                        <td>
+                            <%= note.createdAt ? note.createdAt.toLocaleString() : '-' %>
+                        </td>
+                        <!--
+                            Creation timestamp formatted using toLocaleString().
+                            If missing, display '-'.
+                        -->
+
+                        <td>
+                            <%= note.updatedAt ? note.updatedAt.toLocaleString() : '-' %>
+                        </td>
+                        <!-- Last updated timestamp -->
+
+                        <td>
+                            <%= note.dueDate ? note.dueDate.toLocaleString() : '-' %>
+                        </td>
+                        <!-- Due date -->
+
+                        <td class="actions">
+                            <!--
+                                Actions column containing edit and delete controls.
+                                .actions ensures minimum width for buttons.
+                            -->
+
+                            <div class="action-button-row">
+                                <!--
+                                    Flexbox row for edit + delete buttons.
+                                    Ensures spacing and wrapping on small screens.
+                                -->
+
+                                <details class="edit-details">
+                                    <!--
+                                        HTML <details> element:
+                                          • Collapsible section
+                                          • Used for inline editing
+                                        .edit-details removes default marker.
+                                    -->
+
+                                    <summary class="button edit-toggle">Edit</summary>
+                                    <!--
+                                        Summary acts as the clickable toggle.
+                                        Styled as a button.
+                                    -->
+
+                                    <form method="POST"
+                                          action="/notes/<%= note._id %>"
+                                          class="inline-edit-form">
+                                        <!--
+                                            Inline edit form:
+                                              • POST to /notes/:id
+                                              • Updates the note
+                                              • Uses same validation rules as creation
+                                              • Styled with .inline-edit-form
+                                        -->
+
+                                        <input name="title"
+                                               value="<%= note.title %>"
+                                               required>
+                                        <!-- Title input -->
+
+                                        <textarea name="content" required>
+                                            <%= note.content %>
+                                        </textarea>
+                                        <!-- Content textarea -->
+
+                                        <input name="owner"
+                                               value="<%= note.owner %>"
+                                               required>
+                                        <!-- Owner email -->
+
+                                        <select name="type">
+                                            <% noteTypes.forEach(type => { %>
+                                                <option value="<%= type %>"
+                                                        <%= note.type === type ? 'selected' : '' %>>
+                                                    <%= type %>
+                                                </option>
+                                                <!--
+                                                    Dropdown option for type.
+                                                    Pre-select current type.
+                                                -->
+                                            <% }) %>
+                                        </select>
+
+                                        <select name="priority">
+                                            <% priorities.forEach(priority => { %>
+                                                <option value="<%= priority %>"
+                                                        <%= note.priority === priority ? 'selected' : '' %>>
+                                                    <%= priority %>
+                                                </option>
+                                                <!-- Pre-select current priority -->
+                                            <% }) %>
+                                        </select>
+
+                                        <select name="status">
+                                            <% statuses.forEach(status => { %>
+                                                <option value="<%= status %>"
+                                                        <%= note.status === status ? 'selected' : '' %>>
+                                                    <%= status %>
+                                                </option>
+                                                <!-- Pre-select current status -->
+                                            <% }) %>
+                                        </select>
+
+                                        <input name="dueDate"
+                                               type="datetime-local"
+                                               value="<%= note.dueDate ? note.dueDate.toISOString().slice(0, 16) : '' %>">
+                                        <!--
+                                            Due date input:
+                                              • Must be ISO string sliced to YYYY-MM-DDTHH:mm
+                                              • Ensures browser-compatible datetime-local format
+                                        -->
+
+                                        <button class="button save-button" type="submit">
+                                            Save
+                                        </button>
+                                        <!-- Save button -->
+                                    </form>
+                                </details>
+
+                                <form method="POST"
+                                      action="/notes/<%= note._id %>/delete"
+                                      class="delete-form">
+                                    <!--
+                                        Delete form:
+                                          • POST to /notes/:id/delete
+                                          • Soft-deletes the note
+                                          • Uses .delete-form for spacing
+                                    -->
+
+                                    <button class="button danger" type="submit">
+                                        Delete
+                                    </button>
+                                    <!-- Delete button styled in red -->
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    </div>
+</section>

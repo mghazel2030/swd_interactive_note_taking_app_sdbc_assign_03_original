@@ -1,0 +1,220 @@
+<!--
+    @file partials/noteForm.ejs
+
+    @Description: 
+
+    - This file is the global header template used across all pages in your MVC + Express + EJS application.
+    - It defines the top portion of every page.
+
+    Author: mghazel
+ 
+    Version: 10-June-2026
+-->
+
+<section class="panel">
+    <!--
+        Outer container for the note creation form.
+        .panel class provides:
+          • White background
+          • Rounded corners
+          • Drop shadow
+          • Padding
+        This visually groups the form as a distinct UI component.
+    -->
+
+    <h2>Create New Note</h2>
+    <!--
+        Section heading.
+        Indicates that this form is used to create a new note.
+        In future enhancements, this could be reused for editing notes as well.
+    -->
+
+    <form method="POST" action="/notes" class="note-form">
+        <!--
+            Form element that submits a POST request to /notes.
+            This route is handled by:
+                router.post('/notes', validateNotePayload, asyncHandler(noteController.createNote))
+            The form uses:
+              • method="POST" — required for creating resources
+              • action="/notes" — server endpoint for note creation
+              • class="note-form" — styling hook
+        -->
+
+        <div class="form-grid two-columns">
+            <!--
+                Grid container with two columns.
+                .form-grid applies CSS grid layout.
+                .two-columns sets grid-template-columns: repeat(2, 1fr)
+                This creates a responsive two-column layout for Title and Owner fields.
+            -->
+
+            <label>Title
+                <!--
+                    Label for the Title input.
+                    Wrapping the input inside <label> improves accessibility and click behavior.
+                -->
+                <input name="title"
+                       type="text"
+                       required
+                       minlength="2"
+                       placeholder="Lecture notes, project idea, reminder...">
+                <!--
+                    Title input field:
+                      • name="title" — key used in req.body.title
+                      • type="text" — free text input
+                      • required — HTML validation prevents empty submission
+                      • minlength="2" — ensures meaningful titles
+                      • placeholder — suggests examples to the user
+
+                    If validation fails:
+                      • Browser shows built-in validation message
+                      • Server-side validation (validateNotePayload) also checks this field
+                -->
+            </label>
+
+            <label>Owner
+                <!--
+                    Label for Owner input.
+                    Owner represents the email address of the note creator.
+                    This field is pre-filled with the authenticated user's email.
+                -->
+                <input name="owner"
+                       type="email"
+                       value="<%= user.email %>"
+                       required>
+                <!--
+                    Owner input field:
+                      • name="owner" — key used in req.body.owner
+                      • type="email" — browser validates email format
+                      • value="<%= user.email %>" — auto-populated from session
+                      • required — ensures ownership is always recorded
+
+                    This ensures:
+                      • Notes are always tied to the authenticated user
+                      • Prevents spoofing or missing ownership data
+                -->
+            </label>
+        </div>
+
+        <label>Content
+            <!--
+                Label for the main note content.
+                This is the body of the note.
+            -->
+            <textarea name="content"
+                      rows="5"
+                      required
+                      placeholder="Write your note here..."></textarea>
+            <!--
+                Textarea for note content:
+                  • name="content" — key used in req.body.content
+                  • rows="5" — initial height
+                  • required — prevents empty notes
+                  • placeholder — guides user input
+
+                This field is validated both client-side and server-side.
+            -->
+        </label>
+
+        <div class="form-grid four-columns">
+            <!--
+                Grid container with four columns.
+                Used for Type, Priority, Status, and Due Date fields.
+                Ensures compact, organized layout.
+            -->
+
+            <label>Type
+                <!--
+                    Dropdown for note type/category.
+                    Values come from noteTypes array passed from controller.
+                -->
+                <select name="type">
+                    <% noteTypes.forEach(type => { %>
+                        <!--
+                            Loop through each note type.
+                            EJS forEach renders one <option> per type.
+                        -->
+                        <option value="<%= type %>"><%= type %></option>
+                        <!--
+                            Option element:
+                              • value="<%= type %>" — submitted value
+                              • <%= type %> — visible label
+                        -->
+                    <% }) %>
+                </select>
+            </label>
+
+            <label>Priority
+                <!--
+                    Dropdown for note priority.
+                    Values come from priorities array.
+                    Default selection is "Medium".
+                -->
+                <select name="priority">
+                    <% priorities.forEach(priority => { %>
+                        <option value="<%= priority %>"
+                                <%= priority === 'Medium' ? 'selected' : '' %>>
+                            <%= priority %>
+                        </option>
+                        <!--
+                            Option element:
+                              • value="<%= priority %>"
+                              • Visible label: <%= priority %>
+                              • If priority === 'Medium', mark as selected.
+
+                            This sets "Medium" as the default priority.
+                        -->
+                    <% }) %>
+                </select>
+            </label>
+
+            <label>Status
+                <!--
+                    Dropdown for note status.
+                    Values come from statuses array.
+                -->
+                <select name="status">
+                    <% statuses.forEach(status => { %>
+                        <option value="<%= status %>"><%= status %></option>
+                        <!--
+                            Option element:
+                              • value="<%= status %>"
+                              • Visible label: <%= status %>
+                        -->
+                    <% }) %>
+                </select>
+            </label>
+
+            <label>Due Date
+                <!--
+                    Label for due date input.
+                    Allows user to set a deadline for the note.
+                -->
+                <input name="dueDate" type="datetime-local">
+                <!--
+                    Due date input:
+                      • name="dueDate" — key used in req.body.dueDate
+                      • type="datetime-local" — browser-native date/time picker
+
+                    This field is optional.
+                    If left empty:
+                      • No due date is stored
+                -->
+            </label>
+        </div>
+
+        <button class="button primary" type="submit">Create Note</button>
+        <!--
+            Submit button:
+              • class="button primary" — blue styling
+              • type="submit" — triggers form submission
+
+            When clicked:
+              • Browser performs HTML validation
+              • Form POSTs to /notes
+              • Server validates payload
+              • Note is created in MongoDB
+              • User is redirected to /notes
+        -->
+    </form>
+</section>

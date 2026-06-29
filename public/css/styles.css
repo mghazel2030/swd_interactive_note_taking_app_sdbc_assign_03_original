@@ -1,0 +1,345 @@
+/**
+ * ========================================================================
+ * @file        public/css/styles.css
+ 
+ * @description Finalized, fully documented stylesheet for the EJS Note
+ *              Taking App. This file organizes all styles into clearly
+ *              defined sections, adds a full table of contents, and
+ *              documents each block without modifying any CSS rules.
+ *
+ * @author      mghazel
+ *
+ * @version     10-June-2026
+ * ========================================================================
+ *
+ * TABLE OF CONTENTS
+ * ------------------------------------------------------------------------
+ *  01. Global Resets & Base Styles
+ *  02. Layout Containers
+ *  03. Header & Footer
+ *  04. User Badge & Authentication UI
+ *  05. Panels & Alerts
+ *  06. Forms & Inputs
+ *  07. Buttons
+ *  08. Tables (Notes Table)
+ *  09. Inline Editing Components
+ *  10. Utility Classes
+ *  11. Responsive Media Queries
+ * ------------------------------------------------------------------------
+ */
+
+
+/* =========================================================================
+   01. GLOBAL RESETS & BASE STYLES
+   -------------------------------------------------------------------------
+   Basic normalization and global typography/background settings.
+   ========================================================================= */
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #dff5df;
+    color: #1f2933;
+}
+
+
+/* =========================================================================
+   02. LAYOUT CONTAINERS
+   -------------------------------------------------------------------------
+   Page shell and global layout constraints.
+   ========================================================================= */
+
+.page-shell {
+    width: min(1680px, calc(100% - 48px));
+    margin: 24px auto;
+}
+
+@media (min-width: 1400px) {
+    .page-shell { width: min(1780px, calc(100% - 64px)); }
+}
+
+
+/* =========================================================================
+   03. HEADER & FOOTER
+   -------------------------------------------------------------------------
+   Site-wide header and footer styling.
+   ========================================================================= */
+
+.site-header,
+.site-footer {
+    text-align: center;
+    padding: 24px 16px;
+    background: #d8efff;
+    border-bottom: 2px solid #93c5fd;
+}
+
+.site-header h1 { margin: 0 0 8px; color: #174a78; }
+.site-header p { margin: 6px 0; }
+
+.site-footer {
+    border-top: 2px solid #93c5fd;
+    border-bottom: 0;
+}
+
+
+/* =========================================================================
+   04. USER BADGE & AUTHENTICATION UI
+   -------------------------------------------------------------------------
+   User identity row, avatar, and logout form.
+   ========================================================================= */
+
+.user-badge {
+    color: #166534;
+    margin: 0;
+    white-space: nowrap;
+}
+
+.user-row {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    margin: 14px auto 0;
+    max-width: 100%;
+}
+
+.user-avatar {
+    align-items: center;
+    background: #174a78;
+    border: 2px solid #ffffff;
+    border-radius: 999px;
+    color: #ffffff;
+    display: inline-flex;
+    flex: 0 0 40px;
+    font-weight: 800;
+    height: 40px;
+    justify-content: center;
+    line-height: 1;
+    width: 40px;
+}
+
+.logout-form { margin: 0; }
+
+
+/* =========================================================================
+   05. PANELS & ALERTS
+   -------------------------------------------------------------------------
+   General content panels, login panel, muted text, and alert messages.
+   ========================================================================= */
+
+.panel {
+    background: #ffffff;
+    border: 2px solid #8dbf8d;
+    border-radius: 14px;
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08);
+    margin-bottom: 24px;
+    padding: 22px;
+}
+
+.panel h2 { color: #1d4d1d; }
+
+.login-panel {
+    margin: 48px auto;
+    max-width: 680px;
+    text-align: center;
+}
+
+.muted { color: #52616b; line-height: 1.6; }
+
+.alert {
+    border-radius: 10px;
+    font-weight: 700;
+    margin: 18px 0;
+    padding: 12px 14px;
+}
+
+.error-alert {
+    background: #fee2e2;
+    border: 2px solid #ef4444;
+    color: #7f1d1d;
+}
+
+.g_id_signin {
+    display: flex;
+    justify-content: center;
+    margin-top: 22px;
+}
+
+
+/* =========================================================================
+   06. FORMS & INPUTS
+   -------------------------------------------------------------------------
+   Form labels, inputs, textareas, select elements, and grid layouts.
+   ========================================================================= */
+
+label {
+    display: block;
+    font-weight: 700;
+    margin-bottom: 14px;
+}
+
+input,
+select,
+textarea {
+    width: 100%;
+    margin-top: 6px;
+    padding: 10px 12px;
+    border: 2px solid #9aca9a;
+    border-radius: 8px;
+    font: inherit;
+}
+
+textarea { resize: vertical; }
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.form-grid {
+    display: grid;
+    gap: 16px;
+}
+
+.two-columns { grid-template-columns: repeat(2, 1fr); }
+.four-columns { grid-template-columns: repeat(4, 1fr); }
+
+
+/* =========================================================================
+   07. BUTTONS
+   -------------------------------------------------------------------------
+   Button base class and color variants.
+   ========================================================================= */
+
+.button {
+    border: 0;
+    border-radius: 8px;
+    cursor: pointer;
+    display: inline-block;
+    font-weight: 700;
+    padding: 10px 16px;
+    text-decoration: none;
+}
+
+.primary { background: #2563eb; color: white; }
+.secondary { background: #15803d; color: white; }
+.danger { background: #b91c1c; color: white; }
+.save-button { background: #15803d; color: #ffffff; }
+
+.button:hover { filter: brightness(0.95); }
+
+
+/* =========================================================================
+   08. TABLES (NOTES TABLE)
+   -------------------------------------------------------------------------
+   Notes table layout, cells, hover states, and action columns.
+   ========================================================================= */
+
+.table-wrapper { overflow-x: auto; }
+
+.notes-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 980px;
+}
+
+.notes-table th,
+.notes-table td {
+    border: 1px solid #9aca9a;
+    padding: 10px;
+    text-align: left;
+    vertical-align: top;
+}
+
+.notes-table th {
+    background: #d8efff;
+    color: #174a78;
+}
+
+.notes-table tbody tr:hover { background: #f0fdf4; }
+
+.empty-cell { text-align: center; font-weight: 700; }
+
+.pill {
+    background: #e0f2fe;
+    border-radius: 999px;
+    padding: 4px 10px;
+}
+
+.actions { min-width: 320px; }
+
+.action-button-row {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+
+/* =========================================================================
+   09. INLINE EDITING COMPONENTS
+   -------------------------------------------------------------------------
+   Details/summary toggles, inline edit forms, delete form, error panel.
+   ========================================================================= */
+
+.edit-details summary { list-style: none; }
+.edit-details summary::-webkit-details-marker { display: none; }
+
+.edit-toggle { background: #2563eb; color: #ffffff; }
+
+.inline-edit-form {
+    background: #f8fafc;
+    border: 1px solid #bfdbfe;
+    border-radius: 10px;
+    display: grid;
+    gap: 8px;
+    margin-top: 8px;
+    padding: 10px;
+}
+
+.delete-form { margin: 0; }
+
+.error-panel { text-align: center; }
+
+
+/* =========================================================================
+   10. UTILITY CLASSES
+   -------------------------------------------------------------------------
+   Floating button, misc helpers.
+   ========================================================================= */
+
+.go-top {
+    position: fixed;
+    bottom: 22px;
+    right: 22px;
+    border: 0;
+    border-radius: 999px;
+    padding: 12px 14px;
+    background: #174a78;
+    color: white;
+    cursor: pointer;
+}
+
+
+/* =========================================================================
+   11. RESPONSIVE MEDIA QUERIES
+   -------------------------------------------------------------------------
+   Mobile layout adjustments.
+   ========================================================================= */
+
+@media (max-width: 900px) {
+    .two-columns,
+    .four-columns { grid-template-columns: 1fr; }
+
+    .page-shell { width: min(100% - 20px, 1680px); }
+
+    .panel { padding: 16px; }
+}

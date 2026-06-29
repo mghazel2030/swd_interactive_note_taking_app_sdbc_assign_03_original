@@ -1,0 +1,167 @@
+<!--
+    @file partials/header.ejs
+
+    @Description: 
+
+    - This header partial is included at the top of every page.
+
+    Author: mghazel
+ 
+    Version: 10-June-2026
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<!--
+    Declares the document type as HTML5.
+    Ensures browsers interpret the page using modern HTML standards.
+
+    lang="en":
+      • Indicates the primary language of the document.
+      • Helps screen readers and accessibility tools.
+-->
+<head>
+    <meta charset="UTF-8">
+    <!--
+        Sets the character encoding to UTF‑8.
+        Supports all modern characters, including emojis and multilingual text.
+    -->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--
+        Enables responsive design.
+        Ensures the layout scales correctly on mobile devices.
+        width=device-width:
+            - Matches the screen width of the device.
+        initial-scale=1.0:
+            - Prevents automatic zooming on mobile.
+    -->
+
+    <title><%= title %></title>
+    <!--
+        Dynamically sets the page title using the EJS variable "title".
+        <%= %> escapes HTML to prevent injection.
+        Example values:
+          • "My Notes"
+          • "Login"
+          • "Error"
+    -->
+
+    <link rel="stylesheet" href="/css/styles.css">
+    <!--
+        Loads the main stylesheet for the entire application.
+        This file contains:
+          • Layout styles
+          • Buttons
+          • Tables
+          • Forms
+          • Responsive rules
+        The path /css/styles.css is served by Express's static middleware.
+    -->
+</head>
+
+<body>
+<!--
+    Opens the <body> element.
+    All visible content and interactive elements must be inside this tag.
+-->
+
+<header class="site-header">
+    <!--
+        Header section styled with .site-header.
+        Provides:
+          • Background color
+          • Padding
+          • Centered layout
+          • Optional user info row
+    -->
+
+    <h1>Midterm Assignment: Note Taking &amp; Management App</h1>
+    <!--
+        Main application title.
+        &amp; is used to safely render the ampersand (&) character.
+    -->
+
+    <h3>Using MVC, Express, EJS, MongoDB &amp; Google Session Authentication</h3>
+    <!--
+        Subtitle describing the technology stack.
+        Useful for documentation, branding, and developer clarity.
+    -->
+
+    <% if (typeof user !== 'undefined' && user) { %>
+        <!--
+            Conditional block:
+            Only render the authenticated user UI if:
+              • user is defined
+              • user is truthy (not null or empty)
+            Prevents runtime errors if "user" is not passed from the controller.
+        -->
+
+        <div class="user-row" aria-label="Authenticated user information">
+            <!--
+                Container for user identity display.
+                .user-row styles:
+                  • Flexbox layout
+                  • Center alignment
+                  • Spacing between avatar, badge, and logout button
+                aria-label improves accessibility for screen readers.
+            -->
+
+            <div class="user-avatar" aria-hidden="true">
+                <!--
+                    Circular avatar showing the first letter of the user's name or email.
+                    aria-hidden="true":
+                      • Screen readers ignore this decorative element.
+                    Expression:
+                      (user.name || user.email || 'U')
+                        - Use user's name if available
+                        - Otherwise use email
+                        - Otherwise fallback to 'U'
+                      .trim().charAt(0).toUpperCase()
+                        - Extract first character
+                        - Convert to uppercase
+                -->
+                <%= (user.name || user.email || 'U').trim().charAt(0).toUpperCase() %>
+            </div>
+
+            <p class="user-badge">
+                <!--
+                    Displays the authenticated user's email.
+                    .user-badge styles:
+                      • Green text
+                      • Bold emphasis
+                      • No wrapping
+                -->
+                Signed in as <strong><%= user.email %></strong>
+            </p>
+
+            <form method="POST" action="/logout" class="logout-form">
+                <!--
+                    Logout form:
+                      • Uses POST to avoid accidental logouts via GET requests.
+                      • action="/logout" triggers the logout route.
+                      • class="logout-form" ensures consistent spacing.
+                -->
+
+                <button class="button secondary" type="submit">Logout</button>
+                <!--
+                    Logout button styled with:
+                      • .button (base button styles)
+                      • .secondary (green background)
+                    type="submit" triggers the form submission.
+                -->
+            </form>
+        </div>
+    <% } %>
+    <!-- End of authenticated user block -->
+</header>
+
+<main class="page-shell">
+<!--
+    Opens the main content container.
+    .page-shell styles:
+      • Centers content
+      • Sets max width (responsive)
+      • Adds horizontal padding
+    All page-specific content will be inserted after this tag.
+-->

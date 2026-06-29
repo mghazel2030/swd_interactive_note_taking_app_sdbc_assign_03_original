@@ -1,0 +1,65 @@
+<!--
+    @file views/notes/index.ejs
+
+    @Description: 
+
+    - This file is the main Notes page, composed entirely of partials.
+    - It acts as a layout orchestrator, assembling the UI from reusable components.
+
+    Author: mghazel
+ 
+    Version: 10-June-2026
+-->
+
+<%- include('../partials/header', { title, user }) %>
+<!--
+    Includes the shared header partial.
+    Passed variables:
+      • title — The page title (e.g., "My Notes").
+      • user — The authenticated user object, used for showing avatar, logout button, etc.
+
+    <%- %> is used instead of <%= %> to render raw HTML without escaping.
+    This is required because the header partial contains HTML markup.
+-->
+
+<%- include('../partials/noteForm', { user, noteTypes, priorities, statuses }) %>
+<!--
+    Includes the note creation/editing form partial.
+    Passed variables:
+      • user — The authenticated user, used for ownership or personalization.
+      • noteTypes — Array of allowed note categories (e.g., School, Work, Personal).
+      • priorities — Array of allowed priority values (e.g., High, Medium, Low).
+      • statuses — Array of allowed status values (e.g., In-progress, Completed).
+
+    The noteForm partial typically contains:
+      - Input fields for title, content, type, priority, status, due date.
+      - Validation messages.
+      - A submit button for creating a new note.
+
+    This partial is responsible for rendering the UI for creating or editing notes.
+-->
+
+<%- include('../partials/noteTable', { notes, noteTypes, priorities, statuses }) %>
+<!--
+    Includes the notes table partial.
+    Passed variables:
+      • notes — Array of note objects retrieved from the database.
+      • noteTypes — Used for filtering or displaying type labels.
+      • priorities — Used for displaying priority labels or color-coded badges.
+      • statuses — Used for displaying status labels or styling.
+
+    The noteTable partial typically contains:
+      - A table listing all notes belonging to the authenticated user.
+      - Columns for title, content, type, priority, status, due date.
+      - Inline edit controls (summary/details).
+      - Delete buttons.
+      - Action rows for editing or deleting notes.
+
+    This partial is responsible for rendering the main notes list UI.
+-->
+
+<%- include('../partials/footer') %>
+<!--
+    Includes the shared footer partial.
+    Rendered with <%- %> to avoid escaping HTML.
+-->
