@@ -1,4 +1,4 @@
-# Note Taking & Management App — Midterm Assignment # 3:
+# Note Taking & Management App — Midterm Project:
 
 This is my implementation of the Note Taking & Management App, using:
 
